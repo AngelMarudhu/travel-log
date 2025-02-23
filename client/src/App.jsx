@@ -8,6 +8,7 @@ const LoginPage = lazy(() => import("./Pages/LoginPage"));
 const RegisterPage = lazy(() => import("./Pages/RegisterPage"));
 const UserLog = lazy(() => import("./Pages/Traveler/UserLog"));
 const Dashboard = lazy(() => import("./Pages/Admin/Dashboard"));
+const SearchResult = lazy(() => import("./Components/SearchResults"));
 
 function App() {
   return (
@@ -60,6 +61,16 @@ function App() {
               <ProtectedRoute authRequired={true} role="admin">
                 <Suspense fallback={<div>Loading...</div>}>
                   <Dashboard />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search-results"
+            element={
+              <ProtectedRoute authRequired={true} role="traveler">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SearchResult />
                 </Suspense>
               </ProtectedRoute>
             }

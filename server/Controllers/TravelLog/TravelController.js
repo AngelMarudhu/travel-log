@@ -15,7 +15,7 @@ export const createTravelLog = async (req, res) => {
     const newTravelLog = await travelLogSchema.create({
       title,
       description,
-      location,
+      location: location.toLowerCase(),
       cost,
       date,
       placesToVisit: parsedPlacesToVisit,

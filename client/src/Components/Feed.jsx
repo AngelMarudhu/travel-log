@@ -10,17 +10,19 @@ import { CiMenuKebab } from "react-icons/ci";
 import FeedMenu from "./FeedMenu";
 import useDebouncing from "../CustomHooks/useDebouncing";
 import _ from "lodash";
+import useSocket from "../Utils/Socket";
 
-const Feed = () => {
+const Feed = ({ userId }) => {
   const [feedMenu, setFeedMenu] = useState(null);
   const debounce = useDebouncing(getTravelLogs);
+  const [likes, setLikes] = useState(new Map());
   const dispatch = useDispatch();
 
   const { travelLogs, currentPage, totalPages, isLoading } = useSelector(
     (state) => state.travelLog
   );
 
-  // console.log(travelLogs);
+  const { isConnected, likeTravelLog } = useSocket();
 
   const handleLoadMore = () => {
     if (currentPage <= totalPages) {
@@ -36,6 +38,27 @@ const Feed = () => {
     setFeedMenu(feedMenu === id ? null : id);
   };
 
+  const handleLike = (log) => {
+    // likeTravelLog({ logId: log._id, userId: log.user._id });
+    /// first we nned to check if the user has already liked the log locally or no
+
+    setLikes((prev) => {
+      const newLikes = new Map(prev);
+      const currentLikes = newLikes.get(log._id) || log.likes.length;
+
+      if (newLikes.has(log._id)) {
+        newLikes.set(log._id, currentLikes - 1);
+        newLikes.delete(log._id);
+      } else {
+        newLikes.set(log._id, currentLikes + 1);
+      }
+
+      return newLikes;
+    });
+
+    likeTravelLog({ logId: log._id, userId });
+  };
+
   return (
     <div className="w-full p-6 ">
       <div className="w-full">
@@ -47,7 +70,7 @@ const Feed = () => {
             <header className="p-4 bg-gray-100 flex justify-between items-center border-b-1 mb-1">
               <div className="flex flex-col items-start space-x-4">
                 <h2 className="capitalize ">{log.user.name}</h2>
-                <div className="flex flex-col items-start space-x-2">
+                <div className="flex flex-col items-start space-x-2 capitalize">
                   <h2 className="text-lg font-semibold text-gray-800 capitalize">
                     {log.title}
                   </h2>
@@ -91,10 +114,13 @@ const Feed = () => {
               <p className="text-gray-600 capitalize">{log.description}</p>
             </section>
             <footer className="p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
-              <button className="p-2 rounded-lg bg-blue-500 text-white cursor-pointer">
+              <button
+                onClick={() => handleLike(log)}
+                className="p-2 rounded-lg bg-blue-500 text-white cursor-pointer"
+              >
                 Like❤️
                 <span className="text-gray-800 font-semibold ml-3">
-                  {log.likes.length}
+                  {likes.get(log._id) || log.likes.length}
                 </span>
               </button>
               <time dateTime={log.date}>

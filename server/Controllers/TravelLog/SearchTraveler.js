@@ -3,9 +3,9 @@ import travelLogSchema from "../../Models/travelLogSchema.js";
 export const searchByLocation = async (req, res) => {
   try {
     const location = req.query;
-    console.log(location);
+    // console.log(location);
     const searchLogs = await travelLogSchema.find(location);
-    if (!searchLogs) {
+    if (searchLogs.length === 0) {
       return res.status(400).json({ message: "No logs found" });
     }
     res.status(200).json({ searchLogs });

@@ -3,7 +3,9 @@ import authSlice from "../Redux/AuthSlice.jsx";
 import travelLogSlice from "../Redux/TravelLogSlice.jsx";
 import userLogSlice from "../Redux/UserLogSlice.jsx";
 import adminSlice from "../Redux/Admin/AdminSlice.jsx";
-import { combineReducers } from "@reduxjs/toolkit";
+import searchLogSlice from "../Redux/SearchLogSlice.jsx";
+
+// import { combineReducers } from "@reduxjs/toolkit";
 
 // const travelerReducer = {
 //   travelLog: travelLogSlice,
@@ -25,5 +27,6 @@ export const store = configureStore({
     travelLog: travelLogSlice,
     userLog: userLogSlice,
     admin: adminSlice,
+    searchLogByLocation: searchLogSlice,
   },
 });

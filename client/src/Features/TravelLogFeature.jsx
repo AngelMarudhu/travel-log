@@ -42,3 +42,33 @@ export const createTraveLog = createAsyncThunk(
     }
   }
 );
+
+export const searchLogByLocation = createAsyncThunk(
+  "search-log-location",
+  async (location, thunkAPI) => {
+    try {
+      if (!location) {
+        return thunkAPI.rejectWithValue({
+          error: "Location is required",
+        });
+      }
+      const response = await axios.get(
+        `${API_URL}/search-log-by-location?location=${location}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+            accept: "application/json",
+          },
+        }
+      );
+
+      // console.log(response.data);
+      return response.data.searchLogs;
+    } catch (error) {
+      // console.log(error);
+      return thunkAPI.rejectWithValue({
+        error: error.response.data,
+      });
+    }
+  }
+);
