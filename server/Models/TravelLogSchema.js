@@ -15,6 +15,10 @@ const TravelLogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    fromLocation: {
+      type: String,
+      required: true,
+    },
     location: {
       type: String,
       required: true,

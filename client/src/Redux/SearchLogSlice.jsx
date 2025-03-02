@@ -5,7 +5,8 @@ const initialState = {
   searchLogLocation: [],
   isLoading: false,
   error: null,
-  yourSearchLocation: sessionStorage.getItem("yourSearchLocation") || null,
+  yourSearchLocation:
+    JSON.parse(sessionStorage.getItem("yourSearchLocation")) || null,
 };
 
 const searchLogSlice = createSlice({
@@ -14,9 +15,13 @@ const searchLogSlice = createSlice({
 
   reducers: {
     yourSearchLocationQuery: (state, action) => {
+      console.log(action.payload);
       state.yourSearchLocation = action.payload;
 
-      sessionStorage.setItem("yourSearchLocation", action.payload);
+      sessionStorage.setItem(
+        "yourSearchLocation",
+        JSON.stringify(action.payload)
+      );
     },
   },
 

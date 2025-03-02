@@ -1,10 +1,19 @@
+import CommendSchema from "../../Models/CommendSchema.js";
 import travelLogSchema from "../../Models/travelLogSchema.js";
 import userSchema from "../../Models/UserSchema.js";
 
 export const createTravelLog = async (req, res) => {
   try {
-    const { title, description, location, cost, date, placesToVisit, images } =
-      req.body;
+    const {
+      title,
+      description,
+      location,
+      cost,
+      date,
+      placesToVisit,
+      images,
+      fromLocation,
+    } = req.body;
 
     // console.log(req.body, "controller");
     /// we got array of places to visit so we need to parse it to array
@@ -16,6 +25,7 @@ export const createTravelLog = async (req, res) => {
       title,
       description,
       location: location.toLowerCase(),
+      fromLocation: fromLocation.toLowerCase(),
       cost,
       date,
       placesToVisit: parsedPlacesToVisit,
@@ -144,5 +154,63 @@ export const getTravelLogById = async (req, res) => {
     res.status(200).json({ yourTravelLogs });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+export const getTrendingPlaces = async (req, res) => {
+  try {
+    // console.log("get trending places");
+    const threshHold = 4;
+    const trendingPlaces = await travelLogSchema.aggregate([
+      {
+        $match: {
+          $expr: { $gte: [{ $size: "$likes" }, threshHold] },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          location: 1,
+          likesCount: { $size: "$likes" },
+          user: 1,
+          createdAt: 1,
+        },
+      },
+      {
+        $sort: {
+          likesCount: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+    // console.log(trendingPlaces);
+
+    res.status(200).json({ trendingPlaces });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getCommentTravelLog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(id);
+
+    const travelLog = await CommendSchema.find({ travelLog: id }).populate(
+      "user",
+      "name"
+    );
+
+    if (!travelLog) {
+      return res.status(404).json({ message: "travel log not found" });
+    }
+
+    res.status(200).json({ travelLog });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };

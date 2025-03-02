@@ -3,9 +3,13 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { yourSearchLocationQuery } from "../../Redux/SearchLogSlice";
+import { filterUserLog } from "../../Redux/UserLogSlice";
 
-const SearchLog = () => {
-  const [searchLocation, setSearchLocation] = useState("");
+const SearchLog = ({ userLog }) => {
+  const [searchLocation, setSearchLocation] = useState({
+    fromLocation: "",
+    toLocation: "",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -13,10 +17,13 @@ const SearchLog = () => {
   //     (state) => state.searchLogByLocation
   //   );
 
-  //   console.log(yourSearchLocation);
+  // console.log(searchLocation);
 
   const handleSearch = () => {
-    if (searchLocation.trim() === "") {
+    if (
+      searchLocation.fromLocation.trim() === "" ||
+      searchLocation.toLocation.trim() === ""
+    ) {
       toast.error("Please enter a location", {
         position: "bottom-left",
         autoClose: 2000,
@@ -26,11 +33,33 @@ const SearchLog = () => {
       return;
     }
 
-    if (searchLocation.trim() !== "") {
-      dispatch(yourSearchLocationQuery(searchLocation));
-      navigate("/search-results");
+    if (
+      searchLocation.fromLocation.trim() !== "" &&
+      searchLocation.toLocation.trim() !== "" &&
+      !userLog
+    ) {
+      dispatch(
+        yourSearchLocationQuery({
+          fromLocation: searchLocation.fromLocation,
+          toLocation: searchLocation.toLocation,
+        })
+      );
+      // navigate("/search-results");
+      // window.location.href = "/search-results";
+    } else {
+      dispatch(filterUserLog(searchLocation));
     }
     // console.log(searchLocation);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchLocation((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
   return (
@@ -38,13 +67,22 @@ const SearchLog = () => {
       <ToastContainer />
       <div className="border-2 border-black p-2 rounded-2xl">
         <input
-          className=" border-r-2 focus:border-none outline-none mr-3"
+          className=" w-auto border-r-2 focus:border-r-2 outline-none mr-3"
           type="text"
-          placeholder="Search by location"
-          value={searchLocation}
-          onChange={(e) => setSearchLocation(e.target.value)}
+          placeholder="From Location"
+          name="fromLocation"
+          value={searchLocation.fromLocation}
+          onChange={(e) => handleChange(e)}
         />
-        <button onClick={handleSearch} className="cursor-pointer">
+        <input
+          className=" w-auto border-r-2 focus:border-r-2 outline-none mr-3"
+          type="text"
+          name="toLocation"
+          placeholder="To Location"
+          value={searchLocation.toLocation}
+          onChange={(e) => handleChange(e)}
+        />
+        <button onClick={handleSearch} className="cursor-pointer ">
           Search
         </button>
       </div>

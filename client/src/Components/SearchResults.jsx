@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { searchLogByLocation } from "../Features/TravelLogFeature";
 import useDebouncing from "../CustomHooks/useDebouncing";
@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import FeedMenu from "./FeedMenu";
+// import { useLocation } from "react-router";
 
 const SearchResult = () => {
   const { yourSearchLocation, searchLogLocation, isLoading, error } =
@@ -17,7 +18,9 @@ const SearchResult = () => {
   const [feedMenu, setFeedMenu] = useState(null);
   const debounce = useDebouncing(searchLogByLocation);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  // console.log(yourSearchLocation);
 
   // console.log(searchLogLocation);
   // console.log(yourSearchLocation);
@@ -27,14 +30,19 @@ const SearchResult = () => {
     if (yourSearchLocation === null) {
       navigate("/home");
     }
-    debounce(yourSearchLocation);
+    debounce({
+      fromLocation: yourSearchLocation.fromLocation,
+      toLocation: yourSearchLocation.toLocation,
+    });
   }, [yourSearchLocation, navigate]);
 
   return (
     <div>
       <div>
         {isLoading ? "Loading..." : null}
-        <h1 className="text-2xl">{`Your search result ${yourSearchLocation} ${
+        <h1 className="text-2xl ">{`Your search result ${
+          yourSearchLocation.toLocation
+        } ${
           searchLogLocation.length > 0
             ? `Found ${searchLogLocation.length}`
             : `${error}`

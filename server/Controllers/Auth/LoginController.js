@@ -50,6 +50,10 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await userSchema.findOne({ email });
 
+    if (user.isBlocked) {
+      return res.status(401).json({ message: "user is blocked" });
+    }
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

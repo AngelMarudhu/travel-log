@@ -41,7 +41,7 @@ const Home = () => {
   }, []);
 
   return (
-    <motion.div>
+    <div>
       <div className=" fixed top-0 bg-white w-full z-10">
         <header className="flex justify-between items-center p-4">
           <h1>Welcome, {user.role}!</h1>
@@ -92,7 +92,7 @@ const Home = () => {
           </Suspense>
         </div>
       </main>
-    </motion.div>
+    </div>
   );
 };
 

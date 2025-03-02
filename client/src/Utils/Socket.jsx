@@ -5,8 +5,6 @@ const socket = io("http://localhost:9000");
 
 const useSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const [likes, setLikes] = useState(0);
-  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -19,7 +17,12 @@ const useSocket = () => {
     socket.emit("likes", data);
   };
 
-  return { isConnected, likeTravelLog };
+  const commentTravelLog = (data) => {
+    if (!data) return;
+    socket.emit("comment", data);
+  };
+
+  return { isConnected, likeTravelLog, commentTravelLog };
 };
 
 export default useSocket;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { loginUser } from "../Features/AuthFeatures";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error, user } = useSelector((state) => state.auth);
+  const { isLoading, error } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,7 +65,7 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        {error && <p className="text-red-400">{error.message}</p>}
+        {error && <p className="text-red-400">{error.message} by admin</p>}
       </div>
     </div>
   );

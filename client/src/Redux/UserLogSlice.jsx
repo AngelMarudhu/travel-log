@@ -36,6 +36,19 @@ const userLogSlice = createSlice({
         (log) => log._id !== action.payload
       );
     },
+
+    filterUserLog: (state, action) => {
+      console.log(action.payload);
+      const filteredLogs = state.yourLogs.filter((log) => {
+        return (
+          log.location.toLowerCase() ===
+            action.payload.toLocation.toLowerCase() &&
+          log.fromLocation.toLowerCase() ===
+            action.payload.fromLocation.toLowerCase()
+        );
+      });
+      state.yourLogs = filteredLogs;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getUserTravelLogs.pending, (state) => {
@@ -73,7 +86,7 @@ const userLogSlice = createSlice({
   },
 });
 
-export const { showEditLog, setUpdateLog, removeLocalYourLogs } =
+export const { showEditLog, setUpdateLog, removeLocalYourLogs, filterUserLog } =
   userLogSlice.actions;
 
 export default userLogSlice.reducer;

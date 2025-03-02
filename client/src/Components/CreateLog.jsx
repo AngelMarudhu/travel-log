@@ -17,6 +17,7 @@ const CreateLog = () => {
     title: "",
     description: "",
     location: "",
+    fromLocation: "",
     cost: "",
     date: "",
     placesToVisit: [],
@@ -95,6 +96,17 @@ const CreateLog = () => {
             name="description"
             placeholder="Description"
           />
+
+          <input
+            className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            type="text"
+            onChange={handleChange}
+            value={log.fromLocation}
+            required
+            name="fromLocation"
+            placeholder="From Location"
+          />
+
           <input
             className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             type="text"
@@ -102,7 +114,7 @@ const CreateLog = () => {
             value={log.location}
             required
             name="location"
-            placeholder="Location"
+            placeholder="To Location"
           />
           <input
             className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"

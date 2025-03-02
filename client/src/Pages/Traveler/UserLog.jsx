@@ -11,16 +11,16 @@ import { Pagination, Navigation } from "swiper/modules";
 import FeedMenu from "../../Components/FeedMenu";
 import UpdateLog from "../../Components/UpdateLog";
 import { toast, ToastContainer } from "react-toastify";
+import SearchLog from "./SearchLog";
 
 const UserLog = () => {
   const [feedMenu, setFeedMenu] = useState(null);
   const dispatch = useDispatch();
-  const { yourLogs, isLoading, isEditing, updateLog, isUpdated } = useSelector(
+  const { yourLogs, isEditing, updateLog, isUpdated } = useSelector(
     (state) => state.userLog
   );
-  const debounce = useDebouncing(getUserTravelLogs);
 
-  // console.log(yourLogs);
+  const debounce = useDebouncing(getUserTravelLogs);
 
   useEffect(() => {
     debounce();
@@ -42,25 +42,31 @@ const UserLog = () => {
     setFeedMenu(feedMenu === id ? null : id);
   };
 
-  // console.log(updateLog);
+  // console.log(yourLogs);
 
   return (
     <div className="p-4">
       <ToastContainer />
-      <div></div>
-      <main className="flex flex-col md:flex-row flex-wrap items-center justify-between">
+      <div className="w-full mb-3">
+        <header className="flex justify-between items-center">
+          <h2>Welcome traveler!</h2>
+          <SearchLog userLog={true} />
+        </header>
+      </div>
+      <main className="flex flex-col md:flex-row flex-wrap items-center gap-10 m-auto justify-center ">
         {yourLogs?.map((log) => {
           return (
             <article
               key={log._id}
-              className="bg-white mb-2 rounded-2xl overflow-hidden border border-pink-200 relative w-100"
+              className="bg-white mb-2 rounded-2xl overflow-hidden border border-pink-200 relative w-full md:w-1/2 lg:w-1/4 xl:w-1/3"
             >
               <header className="p-4 bg-gray-100 flex justify-between items-center border-b-1 mb-1">
                 <div className="flex flex-col items-start space-x-4">
                   <div className="flex flex-col items-start space-x-2">
                     <h2 className="text-lg font-semibold text-gray-800 capitalize">
-                      {log.title}
+                      Title: {log.title}
                     </h2>
+                    <h3>Location: {log.location}</h3>
                     <p className="text-gray-600 text-sm capitalize">
                       {log.placesToVisit?.join(",⚓")}
                     </p>
@@ -99,8 +105,8 @@ const UserLog = () => {
                 <p className="text-gray-600 capitalize">{log.description}</p>
               </section>
               <footer className="p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
-                <button className="p-2 rounded-lg bg-blue-500 text-white cursor-pointer">
-                  Like❤️
+                <button className="p-2 border-1 rounded-2xl">
+                  Likes❤️
                   <span className="text-gray-800 font-semibold ml-3">
                     {log.likes.length}
                   </span>

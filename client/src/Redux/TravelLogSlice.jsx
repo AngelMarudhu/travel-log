@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getTravelLogs } from "../Features/TravelLogFeature";
+import { getTravelLogs, getTrendingPlaces } from "../Features/TravelLogFeature";
 import { createTraveLog } from "../Features/TravelLogFeature";
 import _ from "lodash";
 
 const initialState = {
   travelLogs: [],
+  trendingPlaces: [],
   isLoading: false,
   isError: false,
   currentPage: 1,
@@ -50,6 +51,16 @@ const travelLogSlice = createSlice({
     builder.addCase(createTraveLog.rejected, (state, action) => {
       state.error = action.payload.error;
       state.isLoading = false;
+    });
+
+    builder.addCase(getTrendingPlaces.pending, (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+
+    builder.addCase(getTrendingPlaces.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.trendingPlaces = action.payload;
     });
   },
 });

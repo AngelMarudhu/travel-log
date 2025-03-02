@@ -3,7 +3,11 @@ import userSchema from "../Models/UserSchema.js";
 
 export const authenticateUser = async (req, res, next) => {
   try {
+    // console.log(req.headers);
     // console.log(req.files, req.body, "authenticate");
+    if (!req.headers.authorization) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decodedToken);

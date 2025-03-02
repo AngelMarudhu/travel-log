@@ -4,6 +4,8 @@ import travelLogSlice from "../Redux/TravelLogSlice.jsx";
 import userLogSlice from "../Redux/UserLogSlice.jsx";
 import adminSlice from "../Redux/Admin/AdminSlice.jsx";
 import searchLogSlice from "../Redux/SearchLogSlice.jsx";
+import { getCommentTravelLog } from "../Features/TravelLogFeature.jsx";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 // import { combineReducers } from "@reduxjs/toolkit";
 
@@ -28,5 +30,8 @@ export const store = configureStore({
     userLog: userLogSlice,
     admin: adminSlice,
     searchLogByLocation: searchLogSlice,
+    [getCommentTravelLog.reducerPath]: getCommentTravelLog.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(getCommentTravelLog.middleware),
 });
