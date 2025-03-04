@@ -1,6 +1,15 @@
 import CommendSchema from "../../Models/CommendSchema.js";
 import travelLogSchema from "../../Models/travelLogSchema.js";
 import userSchema from "../../Models/UserSchema.js";
+import bcrypt from "bcryptjs";
+import { sentOtp } from "../../Middleware/Nodemailer.js";
+
+let otpStorage = {};
+
+const storedOtp = async (email, otp) => {
+  otpStorage[email] = { otp, timeStamp: Date.now() };
+  console.log(`stored otp for ${email} is ${otp}`);
+};
 
 export const createTravelLog = async (req, res) => {
   try {
@@ -212,5 +221,120 @@ export const getCommentTravelLog = async (req, res) => {
     res.status(200).json({ travelLog });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+export const userSentOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const userId = req.user._id.toString();
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    const user = await userSchema.findById(userId);
+    // console.log(otpStorage);
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+
+    if (user.email !== email) {
+      return res.status(400).json({ message: "email not found" });
+    }
+
+    // if (otpStorage[email]) {
+    //   delete otpStorage[email];
+    // }
+
+    storedOtp(email, otp);
+
+    await sentOtp(email, otp);
+
+    res.status(200).json({ message: "otp sent successfully", success: true });
+
+    // console.log(email);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const userId = req.user._id.toString();
+    const user = await userSchema.findById(userId);
+
+    if (!otp) {
+      return res.status(400).json({ message: "otp not found" });
+    }
+
+    // console.log(otpStorage);
+
+    if (otpStorage[user.email].otp !== parseInt(otp)) {
+      return res.status(400).json({ message: "otp not verified" });
+    }
+    ///// five minutes time limit
+    if (otpStorage[user.email].timeStamp < Date.now() - 1000 * 60 * 5) {
+      return res.status(400).json({ message: "otp expired" });
+    }
+
+    res.status(200).json({ message: "otp verified successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const userId = req.user._id.toString();
+
+    const user = await userSchema.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+    const isPasswordValid = await bcrypt.compare(newPassword, user.password);
+
+    if (isPasswordValid) {
+      return res.status(400).json({ message: "new password is same as old" });
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+    await userSchema.findByIdAndUpdate(userId, {
+      password: newPasswordHash,
+    });
+
+    res.status(200).json({ message: "password changed successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const changeEmail = async (req, res) => {
+  try {
+    const { newEmail } = req.body;
+    const userId = req.user._id.toString();
+
+    const user = await userSchema.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+
+    if (user.email === newEmail) {
+      return res.status(400).json({ message: "new email is same as old" });
+    }
+
+    const existingEmailDb = await userSchema.findOne({ email: newEmail });
+
+    if (existingEmailDb) {
+      return res.status(400).json({ message: "email already exists" });
+    }
+
+    await userSchema.findByIdAndUpdate(userId, { email: newEmail });
+
+    res.status(200).json({ message: "email changed successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

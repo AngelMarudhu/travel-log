@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import FeedMenu from "./FeedMenu";
+import SearchFilters from "./SearchFilters/SearchFilters";
 // import { useLocation } from "react-router";
 
 const SearchResult = () => {
@@ -18,13 +19,6 @@ const SearchResult = () => {
   const [feedMenu, setFeedMenu] = useState(null);
   const debounce = useDebouncing(searchLogByLocation);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
-
-  // console.log(yourSearchLocation);
-
-  // console.log(searchLogLocation);
-  // console.log(yourSearchLocation);
-  // console.log(error);
 
   useEffect(() => {
     if (yourSearchLocation === null) {
@@ -36,11 +30,15 @@ const SearchResult = () => {
     });
   }, [yourSearchLocation, navigate]);
 
+  const handleMenuPopUp = (id) => {
+    setFeedMenu(feedMenu === id ? null : id);
+  };
+
   return (
     <div>
       <div>
         {isLoading ? "Loading..." : null}
-        <h1 className="text-2xl ">{`Your search result ${
+        <h1 className="text-2xl text-center ">{`Your search result ${
           yourSearchLocation.toLocation
         } ${
           searchLogLocation.length > 0
@@ -48,6 +46,11 @@ const SearchResult = () => {
             : `${error}`
         }`}</h1>
       </div>
+
+      <div>
+        <SearchFilters />
+      </div>
+
       <div className="w-1/2 m-auto mt-10">
         {searchLogLocation?.map((log) => (
           <article
@@ -71,7 +74,7 @@ const SearchResult = () => {
                 <CiMenuKebab />
               </button>
             </header>
-            {/* ✅ Proper Swiper Implementation ✅ */}
+            {/*  Proper Swiper Implementation  */}
             {log.images?.length > 0 && (
               <Swiper
                 modules={[Pagination, Navigation]}

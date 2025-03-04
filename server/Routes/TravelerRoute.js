@@ -1,6 +1,8 @@
 import express from "express";
 
 import {
+  changeEmail,
+  changePassword,
   createTravelLog,
   deleteTravelLog,
   getCommentTravelLog,
@@ -8,6 +10,8 @@ import {
   getTravelLogById,
   getTrendingPlaces,
   updateTravelLog,
+  userSentOtp,
+  verifyOtp,
 } from "../Controllers/TravelLog/TravelController.js";
 import { searchByLocation } from "../Controllers/TravelLog/SearchTraveler.js";
 
@@ -28,3 +32,11 @@ travelerRouter.get("/search-log-by-location", searchByLocation);
 travelerRouter.get("/get-trending-logs", getTrendingPlaces);
 
 travelerRouter.get("/get-comment-travel-log/:id", getCommentTravelLog);
+
+travelerRouter.post("/user-sent-otp", userSentOtp);
+
+travelerRouter.post("/user-verify-otp", verifyOtp);
+
+travelerRouter.put("/change-user-password", changePassword);
+
+travelerRouter.put("/change-user-email", changeEmail);

@@ -36,7 +36,6 @@ const userLogSlice = createSlice({
         (log) => log._id !== action.payload
       );
     },
-
     filterUserLog: (state, action) => {
       console.log(action.payload);
       const filteredLogs = state.yourLogs.filter((log) => {

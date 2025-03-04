@@ -15,7 +15,7 @@ const searchLogSlice = createSlice({
 
   reducers: {
     yourSearchLocationQuery: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.yourSearchLocation = action.payload;
 
       sessionStorage.setItem(

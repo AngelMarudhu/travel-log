@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, loginUser } from "../Features/AuthFeatures";
+import { registerUser, loginUser, getUserInfo } from "../Features/AuthFeatures";
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
@@ -52,6 +52,24 @@ const authSlice = createSlice({
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       console.log(action.payload.error);
+      state.isLoading = false;
+      state.error = action.payload.error;
+    });
+
+    // get user info
+
+    builder.addCase(getUserInfo.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(getUserInfo.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload.user;
+
+      localStorage.removeItem("user");
+      localStorage.setItem("user", JSON.stringify(state.user));
+    });
+    builder.addCase(getUserInfo.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload.error;
     });

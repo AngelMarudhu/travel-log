@@ -13,12 +13,6 @@ const SearchLog = ({ userLog }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //   const { yourSearchLocation } = useSelector(
-  //     (state) => state.searchLogByLocation
-  //   );
-
-  // console.log(searchLocation);
-
   const handleSearch = () => {
     if (
       searchLocation.fromLocation.trim() === "" ||
@@ -44,7 +38,7 @@ const SearchLog = ({ userLog }) => {
           toLocation: searchLocation.toLocation,
         })
       );
-      // navigate("/search-results");
+      navigate("/search-results");
       // window.location.href = "/search-results";
     } else {
       dispatch(filterUserLog(searchLocation));
