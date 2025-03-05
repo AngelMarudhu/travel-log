@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import useSocket from "../Utils/Socket";
+import { useSelector } from "react-redux";
 import { useGetCommentTravelLogQuery } from "../Features/TravelLogFeature";
 
 const Comment = ({ log, onClosePreview, userId }) => {
   const [commentInput, setCommentInput] = useState("");
   const [comments, setComments] = useState([]);
   const { commentTravelLog } = useSocket();
-  const [showComment, setShowComment] = useState(false);
   const { data: logComments, isLoading } = useGetCommentTravelLogQuery(log._id);
+  const { user } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     setCommentInput(e.target.value);
@@ -38,7 +39,6 @@ const Comment = ({ log, onClosePreview, userId }) => {
     commentTravelLog(commentData);
 
     // localStorage.setItem("comments", JSON.stringify(comments));
-    setShowComment(true);
     setCommentInput("");
   };
 
@@ -77,8 +77,15 @@ const Comment = ({ log, onClosePreview, userId }) => {
         <h2 className="text-center text-gray-400">Comments Box</h2>
         <div>
           {comments?.map((comment, index) => (
-            <div key={index}>
-              <p>{comment.comment}</p>
+            <div
+              key={index}
+              className=" flex flex-col items-start w-full m-2 border-b-2 border-gray-200"
+            >
+              <p>Owner: {user.name} </p>
+              <p className="ml-3">Comment: {comment.comment}</p>
+              <p className="text-sm text-gray-400 ml-3">
+                Posted: {new Date().toLocaleDateString()}
+              </p>
             </div>
           ))}
         </div>

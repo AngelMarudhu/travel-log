@@ -17,17 +17,17 @@ const Comment = lazy(() => import("./Comment"));
 
 const Feed = ({ userId }) => {
   const [feedMenu, setFeedMenu] = useState(null);
-  const debounce = useDebouncing(getTravelLogs);
   const [likes, setLikes] = useState(new Map());
   const [toggleDescription, setToggleDescription] = useState(false);
   const [commentPreview, setCommentPreview] = useState(null);
+  const debounce = useDebouncing(getTravelLogs);
   const dispatch = useDispatch();
 
   const { travelLogs, currentPage, totalPages, isLoading } = useSelector(
     (state) => state.travelLog
   );
-  const { likeTravelLog } = useSocket();
 
+  const { likeTravelLog } = useSocket();
   const handleLoadMore = () => {
     if (currentPage <= totalPages) {
       debounce({ page: currentPage + 1 });
@@ -137,7 +137,7 @@ const Feed = ({ userId }) => {
                       onClick={() => {
                         setToggleDescription(!toggleDescription);
                       }}
-                      className="text-sm text-black cursor-pointer"
+                      className="text-sm ml-2 border-1 border-gray-200 p-1 rounded-lg text-black cursor-pointer"
                     >
                       {toggleDescription ? "ReadLess" : "ReadMore"}
                     </button>

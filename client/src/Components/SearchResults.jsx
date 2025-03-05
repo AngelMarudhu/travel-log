@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState, Suspense } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { searchLogByLocation } from "../Features/TravelLogFeature";
@@ -10,15 +10,24 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import FeedMenu from "./FeedMenu";
-import SearchFilters from "./SearchFilters/SearchFilters";
 // import { useLocation } from "react-router";
 
+const SearchFilters = lazy(() => import("./SearchFilters/SearchFilters"));
+
 const SearchResult = () => {
-  const { yourSearchLocation, searchLogLocation, isLoading, error } =
-    useSelector((state) => state.searchLogByLocation);
+  const {
+    yourSearchLocation,
+    searchLogLocation,
+    filteredSearchLogs,
+    isLoading,
+    error,
+  } = useSelector((state) => state.searchLogByLocation);
   const [feedMenu, setFeedMenu] = useState(null);
   const debounce = useDebouncing(searchLogByLocation);
   const navigate = useNavigate();
+
+  const logToDisplay =
+    filteredSearchLogs.length > 0 ? filteredSearchLogs : searchLogLocation;
 
   useEffect(() => {
     if (yourSearchLocation === null) {
@@ -34,25 +43,28 @@ const SearchResult = () => {
     setFeedMenu(feedMenu === id ? null : id);
   };
 
+  // console.log(searchLogLocation);
+
   return (
-    <div>
-      <div>
+    <div className="">
+      <Suspense fallback={<div>Loading...</div>}>
+        <SearchFilters />
+      </Suspense>
+
+      <div className="pl-5 pr-5">
         {isLoading ? "Loading..." : null}
-        <h1 className="text-2xl text-center ">{`Your search result ${
+        <h1 className="capitalize">{`Your location result ${
           yourSearchLocation.toLocation
         } ${
           searchLogLocation.length > 0
             ? `Found ${searchLogLocation.length}`
-            : `${error}`
+            : error
+            ? error
+            : "No Logs Found"
         }`}</h1>
       </div>
-
-      <div>
-        <SearchFilters />
-      </div>
-
-      <div className="w-1/2 m-auto mt-10">
-        {searchLogLocation?.map((log) => (
+      <div className="w-1/2 m-auto mt-1">
+        {logToDisplay?.map((log) => (
           <article
             key={log._id}
             className="bg-white mb-2 rounded-2xl overflow-hidden border border-pink-200 relative"

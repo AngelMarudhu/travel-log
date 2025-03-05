@@ -1,5 +1,6 @@
 import CommendSchema from "../../Models/CommendSchema.js";
 import travelLogSchema from "../../Models/travelLogSchema.js";
+import likeSchema from "../../Models/likeSchema.js";
 import userSchema from "../../Models/UserSchema.js";
 import bcrypt from "bcryptjs";
 import { sentOtp } from "../../Middleware/Nodemailer.js";
@@ -140,6 +141,8 @@ export const deleteTravelLog = async (req, res) => {
         .json({ message: "you are not the owner of this travel log" });
     }
 
+    await CommendSchema.deleteMany({ travelLog: id });
+    await likeSchema.deleteMany({ travelLog: id });
     await travelLogSchema.findByIdAndDelete(id);
 
     res.status(200).json({ message: "travel log deleted successfully" });

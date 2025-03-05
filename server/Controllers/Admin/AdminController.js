@@ -26,6 +26,20 @@ export const getAllUsers = async (req, res) => {
       },
     ]);
 
+    const totalComments = await travelLogSchema.aggregate([
+      {
+        $project: {
+          commentsCount: { $size: "$comments" },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalComments: { $sum: "$commentsCount" },
+        },
+      },
+    ]);
+
     // console.log(totalLikes);
 
     res.status(200).json({
@@ -34,6 +48,7 @@ export const getAllUsers = async (req, res) => {
         totalUsers,
         totalLogs,
         totalLikes: totalLikes[0]?.totalLikes || 0,
+        totalComments: totalComments[0]?.totalComments || 0,
       },
     });
   } catch (error) {

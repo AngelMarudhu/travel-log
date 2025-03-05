@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IoClose } from "react-icons/io5";
-import { showEditLog } from "../Redux/UserLogSlice";
-import { getUserTravelLogs, updateTravelLog } from "../Features/UserLogFeature";
+import { resetPreviousSession, showEditLog } from "../Redux/UserLogSlice";
+import { updateTravelLog } from "../Features/UserLogFeature";
 
 const UpdateLog = () => {
   const dispatch = useDispatch();
@@ -38,6 +38,7 @@ const UpdateLog = () => {
     // console.log(formData);
     dispatch(updateTravelLog({ id: updateLog._id, data: formData }));
     dispatch(showEditLog());
+    dispatch(resetPreviousSession());
   };
 
   const onClose = () => {

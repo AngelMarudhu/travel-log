@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const useDebouncing = (actionCreator, delay = 300) => {
+const useDebouncing = (actionCreator, delay = 500) => {
   const dispatch = useDispatch();
   const timeRef = useRef(null);
 

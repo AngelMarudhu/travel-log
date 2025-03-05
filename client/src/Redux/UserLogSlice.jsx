@@ -36,6 +36,7 @@ const userLogSlice = createSlice({
         (log) => log._id !== action.payload
       );
     },
+
     filterUserLog: (state, action) => {
       console.log(action.payload);
       const filteredLogs = state.yourLogs.filter((log) => {
@@ -47,6 +48,13 @@ const userLogSlice = createSlice({
         );
       });
       state.yourLogs = filteredLogs;
+    },
+
+    resetPreviousSession: (state) => {
+      state.isEditing = false;
+      state.updateLog = null;
+      state.deletedLog = null;
+      state.isUpdated = false;
     },
   },
   extraReducers: (builder) => {
@@ -85,7 +93,12 @@ const userLogSlice = createSlice({
   },
 });
 
-export const { showEditLog, setUpdateLog, removeLocalYourLogs, filterUserLog } =
-  userLogSlice.actions;
+export const {
+  showEditLog,
+  setUpdateLog,
+  removeLocalYourLogs,
+  filterUserLog,
+  resetPreviousSession,
+} = userLogSlice.actions;
 
 export default userLogSlice.reducer;

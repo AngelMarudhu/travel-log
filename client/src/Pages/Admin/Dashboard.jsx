@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const { users, adminDetails } = useSelector((state) => state.admin);
 
-  // console.log(adminDetails);
+  console.log(adminDetails);
 
   return (
     <div className="w-full h-screen bg-white overflow-hidden">
@@ -46,8 +46,10 @@ const Dashboard = () => {
             <h1 className="text-4xl font-semibold">{adminDetails.totalLogs}</h1>
           </div>
           <div className="border-1 rounded-lg shadow-2xl flex justify-center items-center flex-col">
-            <h2 className="text-2xl font-bold">Total Users</h2>
-            <h1 className="text-4xl font-semibold">100</h1>
+            <h2 className="text-2xl font-bold">Comments</h2>
+            <h1 className="text-4xl font-semibold">
+              {adminDetails.totalComments}
+            </h1>
           </div>
           <div className="border-1 rounded-lg shadow-2xl flex justify-center items-center flex-col">
             <h2 className="text-2xl font-bold">Trending</h2>

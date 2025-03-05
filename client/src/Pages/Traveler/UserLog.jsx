@@ -13,7 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import SearchLog from "./SearchLog";
 import { FaUser, FaEdit } from "react-icons/fa";
 import { showEditOptionPanel } from "../../Redux/Traveler/userInfoSlice";
-import { getUserInfo } from "../../Features/AuthFeatures";
+import { resetPreviousSession } from "../../Redux/UserLogSlice";
 
 const UpdateLog = lazy(() => import("../../Components/UpdateLog"));
 const UserLogUpdateInformation = lazy(() =>
@@ -32,26 +32,11 @@ const UserLog = () => {
 
   useEffect(() => {
     debounce();
-  }, [debounce, updateLog]);
-
-  useEffect(() => {
-    if (isUpdated) {
-      toast.success("Log Updated Successfully", {
-        position: "bottom-left",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-      });
-    }
-  }, [isUpdated]);
+  }, [debounce]);
 
   const handleMenuPopUp = (id) => {
     setFeedMenu(feedMenu === id ? null : id);
   };
-
-  const handleEditGmail = () => {};
-  const handleForgotPassword = () => {};
 
   // console.log(yourLogs);
 

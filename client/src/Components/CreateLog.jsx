@@ -177,7 +177,7 @@ const CreateLog = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? "Creating..." : " Create Log"}
+            {isLoading ? "Loading..." : " Create Log"}
           </button>
         </form>
       </div>
