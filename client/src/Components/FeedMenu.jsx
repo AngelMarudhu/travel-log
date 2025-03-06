@@ -55,7 +55,7 @@ const FeedMenu = ({ userMenu, logs, closeMenu }) => {
             )}
           </li>
           <li className="text-gray-600 hover:border-b-1 hover:border-gray-400 transition-all duration-300">
-            Report Spam
+            {userMenu ? "" : <button>Report</button>}
           </li>
         </ul>
       </div>

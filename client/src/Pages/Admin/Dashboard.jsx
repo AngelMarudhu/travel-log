@@ -1,23 +1,77 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../Redux/AuthSlice";
+import AdminSearchUsers from "./AdminSearchUsers";
+import { setSearchUserName } from "../../Redux/Admin/AdminSlice";
 
 const ManageUser = lazy(() => import("./ManageUser"));
 
 const Dashboard = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const hideUserPanel = useRef(null);
+  const [focus, setFocus] = useState(false);
+  const [selectedUserFromSearch, setSelectedUserFromSearch] = useState(null);
   const dispatch = useDispatch();
+
+  // console.log(selectedUserFromSearch);
+
+  useEffect(() => {
+    if (selectedUserFromSearch) {
+      dispatch(setSearchUserName(selectedUserFromSearch));
+    }
+  }, [selectedUserFromSearch]);
+
   const handleClick = () => {
     dispatch(logOut());
   };
 
-  const { users, adminDetails } = useSelector((state) => state.admin);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        hideUserPanel.current &&
+        !hideUserPanel.current.contains(event.target)
+      ) {
+        setFocus(false);
+      }
+    };
 
-  console.log(adminDetails);
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onmousedown]);
+
+  const { users, adminDetails } = useSelector((state) => state.admin);
 
   return (
     <div className="w-full h-screen bg-white overflow-hidden">
       <header className="flex bg-cyan-200 mb-3 shadow-2xl justify-between items-center p-4">
         <h1>Welcome, Admin!</h1>
+
+        <div className="relative rounded-lg p-2">
+          <input
+            className=" w-auto border-2 p-2 rounded-lg focus:border-r-2 border-l-2 outline-none"
+            type="text"
+            onFocus={(e) => setFocus(true)}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search By Name"
+          />
+          {focus && searchQuery.trim() !== "" && (
+            <div
+              ref={hideUserPanel}
+              className="absolute top-13 left-2 w-100 h-auto z-100 bg-white p-2 rounded-lg shadow-lg"
+            >
+              <AdminSearchUsers
+                users={users}
+                closeFocus={setFocus}
+                searchQuery={searchQuery}
+                selectedUserFromSearch={selectedUserFromSearch}
+                setSelectedUserFromSearch={setSelectedUserFromSearch}
+              />
+            </div>
+          )}
+        </div>
+
         <button className="cursor-pointer" onClick={handleClick}>
           Logout
         </button>

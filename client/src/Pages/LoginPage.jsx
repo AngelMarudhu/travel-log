@@ -66,6 +66,7 @@ const LoginPage = () => {
           </button>
         </form>
         {error && <p className="text-red-400">{error.message} by admin</p>}
+        <a href="/">New Register</a>
       </div>
     </div>
   );

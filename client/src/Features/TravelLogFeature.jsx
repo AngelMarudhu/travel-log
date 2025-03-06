@@ -4,16 +4,28 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_URL = "http://localhost:9000/api/traveler";
 
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    accept: "application/json",
+  },
+});
+
+api.interceptors.request.use((config) => {
+  // Optionally add any code before the request is sent, like adding token
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const getTravelLogs = createAsyncThunk(
   "/get-travel-logs",
   async ({ page = 1 }, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_URL}/get-travel-logs/${page}`, {
+      const response = await api.get(`/get-travel-logs/${page}`, {
         params: { page },
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-          accept: "application/json",
-        },
       });
       return response.data;
     } catch (error) {
@@ -29,11 +41,7 @@ export const createTraveLog = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       // console.log(data);
-      const response = await axios.post(`${API_URL}/log`, data, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await api.post(`/log`, data, {});
       console.log(response.data);
       return response.data.newTravelLog;
     } catch (error) {
@@ -54,14 +62,8 @@ export const searchLogByLocation = createAsyncThunk(
           error: "Location is required",
         });
       }
-      const response = await axios.get(
-        `${API_URL}/search-log-by-location?fromLocation=${location.fromLocation}&toLocation=${location.toLocation}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("token")}`,
-            accept: "application/json",
-          },
-        }
+      const response = await api.get(
+        `/search-log-by-location?fromLocation=${location.fromLocation}&toLocation=${location.toLocation}`
       );
 
       // console.log(response.data);
@@ -79,12 +81,7 @@ export const getTrendingPlaces = createAsyncThunk(
   "get-trending-places",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_URL}/get-trending-logs`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-          accept: "application/json",
-        },
-      });
+      const response = await api.get(`/get-trending-logs`);
 
       // console.log(response.data.trendingPlaces);
       return response.data.trendingPlaces;

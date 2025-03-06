@@ -19,7 +19,7 @@ const ManageUser = () => {
   const [userDetails, setUserDetails] = useState({});
   // console.log(userDetails);
 
-  const { users, deleted, blocked, unblocked } = useSelector(
+  const { users, deleted, blocked, unblocked, searchUsersName } = useSelector(
     (state) => state.admin
   );
   const debounce = useDebouncing(getAllUserDetails);
@@ -27,7 +27,7 @@ const ManageUser = () => {
   // console.log(blocked);
   // console.log(unblocked);
 
-  // console.log(users);
+  // console.log(searchUsersName.searchUserId);
 
   useEffect(() => {
     debounce();
@@ -103,7 +103,15 @@ const ManageUser = () => {
             <div key={user._id} className="w-full">
               <div className="p-2 mb-2 border-2 w-full flex rounded-lg justify-between items-center">
                 <div>
-                  <h1>Name: {user.name}</h1>
+                  <h1
+                    className="capitalize"
+                    style={{
+                      backgroundColor:
+                        searchUsersName?.searchUserId === user._id ? "red" : "",
+                    }}
+                  >
+                    Name: {user.name}
+                  </h1>
                   <h1>
                     Role:{" "}
                     <span className="text-cyan-500 capitalize">

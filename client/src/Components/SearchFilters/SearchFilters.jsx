@@ -97,7 +97,7 @@ const SearchFilters = () => {
             onClick={handleCloseSearch}
             className="p-2 border border-gray-400 rounded-lg cursor-pointer"
           >
-            Clear Search
+            Close Search
           </button>
         )}
 

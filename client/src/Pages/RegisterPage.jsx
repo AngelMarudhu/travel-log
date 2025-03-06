@@ -78,6 +78,7 @@ const RegisterPage = () => {
           </button>
         </form>
         {data.error && <p className=" text-red-500 ">{data.error.message}</p>}
+        <a href="/login">Already Registered</a>
       </div>
     </div>
   );

@@ -24,12 +24,23 @@ const initialState = {
     isUnblocked: false,
     message: "",
   },
+  searchUsersName: {
+    searchUserId: null,
+  },
 };
 
 const adminSlice = createSlice({
   name: "admin",
   initialState,
-  reducers: {},
+  reducers: {
+    setSearchUserName: (state, action) => {
+      state.users.filter((user) => {
+        if (user._id === action.payload) {
+          state.searchUsersName.searchUserId = user._id;
+        }
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllUserDetails.pending, (state) => {
       state.isLoading = true;
@@ -95,5 +106,7 @@ const adminSlice = createSlice({
     });
   },
 });
+
+export const { setSearchUserName } = adminSlice.actions;
 
 export default adminSlice.reducer;

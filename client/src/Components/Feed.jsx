@@ -82,7 +82,7 @@ const Feed = ({ userId }) => {
             >
               <header className="p-4 bg-gray-100 flex justify-between items-center border-b-1 mb-1">
                 <div className="flex flex-col items-start space-x-4">
-                  <h2 className="capitalize ">{log.user?.name}</h2>
+                  <h2 className="capitalize ">Posted: {log.user?.name}</h2>
                   <div className="flex flex-col items-start space-x-2 capitalize">
                     <h2 className="text-lg font-semibold text-gray-800 capitalize">
                       {log.title}

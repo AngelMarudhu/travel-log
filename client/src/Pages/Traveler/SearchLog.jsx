@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { yourSearchLocationQuery } from "../../Redux/SearchLogSlice";
 import { filterUserLog } from "../../Redux/UserLogSlice";
 
